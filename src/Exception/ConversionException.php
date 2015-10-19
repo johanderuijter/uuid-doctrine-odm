@@ -21,6 +21,6 @@ class ConversionException extends MappingException
     {
         $value = (strlen($value) > 32) ? substr($value, 0, 20) . '...' : $value;
 
-        return new self(sprintf('Could not convert database value "%s" to Doctrine Type $s', $value, $toType));
+        return new self(sprintf('Could not convert database value "%s" to Doctrine Type %s', $value, $toType));
     }
 }
