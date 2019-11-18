@@ -2,7 +2,7 @@
 
 namespace JDR\Uuid\Doctrine\ODM\Exception;
 
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 
 /**
  * ConversionException
