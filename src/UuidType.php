@@ -61,7 +61,7 @@ class UuidType extends Type
         throw ConversionException::conversionFailed($value, self::NAME);
     }
 
-    public function closureToPHP()
+    public function closureToPHP(): string
     {
         return sprintf(
             'if (null === $value) {
@@ -81,7 +81,7 @@ class UuidType extends Type
         );
     }
 
-    public function closureToMongo()
+    public function closureToMongo(): string
     {
         return sprintf(
             'if (null === $value) {
