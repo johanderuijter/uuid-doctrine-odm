@@ -3,23 +3,25 @@
 namespace JDR\Uuid\Doctrine\ODM\Test;
 
 use Doctrine\ODM\MongoDB\Types\Type;
+use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
+use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
-class UuidTypeTest extends \PHPUnit_Framework_TestCase
+class UuidTypeTest extends TestCase
 {
     private $type;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         Type::registerType('ramsey_uuid', 'JDR\Uuid\Doctrine\ODM\UuidType');
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->type = Type::getType('ramsey_uuid');
     }
 
-    public function provideValidPHPToDatabaseValues()
+    public function provideValidPHPToDatabaseValues(): array
     {
         $str = 'ff6f8cb0-c57d-11e1-9b21-0800200c9a66';
         $uuid = Uuid::fromString($str);
@@ -30,7 +32,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function provideInvalidPHPToDatabaseValues()
+    public function provideInvalidPHPToDatabaseValues(): array
     {
         $str = 'qwerty';
         $int = 1234567890;
@@ -41,7 +43,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testNullToDatabaseValue()
+    public function testNullToDatabaseValue(): void
     {
         $actual = $this->type->convertToDatabaseValue(null);
         $this->assertNull($actual);
@@ -50,7 +52,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideValidPHPToDatabaseValues
      */
-    public function testValidPHPToDatabaseValue($input, $output)
+    public function testValidPHPToDatabaseValue($input, $output): void
     {
         $actual = $this->type->convertToDatabaseValue($input);
         $this->assertSame($output, $actual);
@@ -58,17 +60,18 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidPHPToDatabaseValues
-     * @expectedException JDR\Uuid\Doctrine\ODM\Exception\ConversionException
      */
-    public function testInvalidPHPToDatabaseValue($input)
+    public function testInvalidPHPToDatabaseValue($input): void
     {
+        $this->expectException(ConversionException::class);
+
         $this->type->convertToDatabaseValue($input);
     }
 
     /**
      * @dataProvider provideValidPHPToDatabaseValues
      */
-    public function testValidClosureToDatabase($input, $output)
+    public function testValidClosureToDatabase($input, $output): void
     {
         $return = null;
 
@@ -81,10 +84,11 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidPHPToDatabaseValues
-     * @expectedException JDR\Uuid\Doctrine\ODM\Exception\ConversionException
      */
-    public function testInvalidClosureToDatabase($input)
+    public function testInvalidClosureToDatabase($input): void
     {
+        $this->expectException(ConversionException::class);
+
         $return = null;
 
         call_user_func(function ($value) use (&$return) {
@@ -92,7 +96,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
         }, $input);
     }
 
-    public function provideValidDatabaseToPHPValues()
+    public function provideValidDatabaseToPHPValues(): array
     {
         $str = 'ff6f8cb0-c57d-11e1-9b21-0800200c9a66';
         $uuid = Uuid::fromString($str);
@@ -103,7 +107,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function provideInvalidDatabaseToPHPValues()
+    public function provideInvalidDatabaseToPHPValues(): array
     {
         $str = 'qwerty';
         $int = 1234567890;
@@ -114,7 +118,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testNullToPHPValue()
+    public function testNullToPHPValue(): void
     {
         $actual = $this->type->convertToPHPValue(null);
         $this->assertNull($actual);
@@ -123,7 +127,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideValidDatabaseToPHPValues
      */
-    public function testValidDatabaseToPHPValue($input, $output)
+    public function testValidDatabaseToPHPValue($input, $output): void
     {
         $actual = $this->type->convertToPHPValue($input);
         $this->assertInstanceOf(Uuid::class, $actual);
@@ -132,17 +136,18 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidDatabaseToPHPValues
-     * @expectedException JDR\Uuid\Doctrine\ODM\Exception\ConversionException
      */
-    public function testInvalidDatabaseToPHPValue($input)
+    public function testInvalidDatabaseToPHPValue($input): void
     {
+        $this->expectException(ConversionException::class);
+
         $this->type->convertToPHPValue($input);
     }
 
     /**
      * @dataProvider provideValidDatabaseToPHPValues
      */
-    public function testValidClosureToPHP($input, $output)
+    public function testValidClosureToPHP($input, $output): void
     {
         call_user_func(function ($value) use (&$return) {
             eval($this->type->closureToPHP());
@@ -154,10 +159,11 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidDatabaseToPHPValues
-     * @expectedException JDR\Uuid\Doctrine\ODM\Exception\ConversionException
      */
-    public function testInvalidClosureToPHP($input)
+    public function testInvalidClosureToPHP($input): void
     {
+        $this->expectException(ConversionException::class);
+
         call_user_func(function ($value) use (&$return) {
             eval($this->type->closureToPHP());
         }, $input);
