@@ -1,5 +1,3 @@
-FROM php:5.6-cli
+FROM php:7.2-cli
 
-RUN apt-get update && apt-get install -y libssl-dev
-
-RUN pecl install mongo && docker-php-ext-enable mongo
+RUN pecl install mongodb && docker-php-ext-enable mongodb
