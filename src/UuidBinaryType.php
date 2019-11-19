@@ -3,8 +3,8 @@
 namespace JDR\Uuid\Doctrine\ODM;
 
 use Doctrine\ODM\MongoDB\Types\Type;
-use FoundersLane\UserBundle\Exception\UuidConversionException;
 use InvalidArgumentException;
+use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
 use MongoDB\BSON\Binary;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -38,7 +38,7 @@ class UuidBinaryType extends Type
         try {
             $uuid = Uuid::fromBytes($value);
         } catch (InvalidArgumentException $e) {
-            throw UuidConversionException::conversionFailed($value, self::NAME);
+            throw ConversionException::conversionFailed($value, self::NAME);
         }
 
         return $uuid;
@@ -66,7 +66,7 @@ class UuidBinaryType extends Type
         if ($value instanceof Uuid) {
             return new Binary($value->getBytes(), Binary::TYPE_UUID);
         }
-        throw UuidConversionException::conversionFailed($value, self::NAME);
+        throw ConversionException::conversionFailed($value, self::NAME);
     }
 
     public function closureToPHP(): string
@@ -83,7 +83,7 @@ class UuidBinaryType extends Type
                 try {
                     $uuid = \Ramsey\Uuid\Uuid::fromBytes($value);
                 } catch (InvalidArgumentException $e) {
-                    throw \FoundersLane\UserBundle\Exception\UuidConversionException::conversionFailed($value, \'%s\');
+                    throw \JDR\Uuid\Doctrine\ODM\Exception\ConversionException::conversionFailed($value, \'%s\');
                 }
             }
             $return = $uuid;',
@@ -105,7 +105,7 @@ class UuidBinaryType extends Type
                 if ($value instanceof \Ramsey\Uuid\Uuid) {
                     $mongo = new \MongoDB\BSON\Binary($value->getBytes(), %d);
                 } else {
-                    throw \FoundersLane\UserBundle\Exception\UuidConversionException::conversionFailed($value, \'%s\');
+                    throw \JDR\Uuid\Doctrine\ODM\Exception\ConversionException::conversionFailed($value, \'%s\');
                 }
             }
             $return = $mongo;',
