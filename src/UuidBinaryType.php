@@ -3,44 +3,42 @@
 namespace JDR\Uuid\Doctrine\ODM;
 
 use Doctrine\ODM\MongoDB\Types\Type;
+use FoundersLane\UserBundle\Exception\UuidConversionException;
 use InvalidArgumentException;
-use MongoBinData;
+use MongoDB\BSON\Binary;
 use Ramsey\Uuid\Uuid;
-
-use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
+use Ramsey\Uuid\UuidInterface;
 
 class UuidBinaryType extends Type
 {
     /**
      * The name of the doctrine type
      */
-    const NAME = 'ramsey_uuid_binary';
+    public const NAME = 'ramsey_uuid_binary';
 
     /**
      * Converts a value from its database representation to its PHP representation of this type.
      *
      * @param mixed $value The value to convert.
      *
-     * @return Uuid
+     * @return \Ramsey\Uuid\UuidInterface
+     * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
      */
-    public function convertToPHPValue($value)
+    public function convertToPHPValue($value): UuidInterface
     {
         if (null === $value) {
             return null;
         }
-
         if ($value instanceof Uuid) {
             return $value;
         }
-
-        if ($value instanceof MongoBinData) {
-            $value = $value->bin;
+        if ($value instanceof Binary) {
+            $value = $value->getData();
         }
-
         try {
-            $uuid =  Uuid::fromBytes($value);
+            $uuid = Uuid::fromBytes($value);
         } catch (InvalidArgumentException $e) {
-            throw ConversionException::conversionFailed($value, self::NAME);
+            throw UuidConversionException::conversionFailed($value, self::NAME);
         }
 
         return $uuid;
@@ -51,30 +49,27 @@ class UuidBinaryType extends Type
      *
      * @param mixed $value The value to convert.
      *
-     * @return MongoBinData
+     * @return \MongoDB\BSON\Binary
+     * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
      */
-    public function convertToDatabaseValue($value)
+    public function convertToDatabaseValue($value): Binary
     {
         if (null === $value) {
             return null;
         }
-
-        if ($value instanceof MongoBinData) {
-            return new MongoBinData($value->bin, MongoBinData::UUID_RFC4122);
+        if ($value instanceof Binary) {
+            return new Binary($value->getData(), Binary::TYPE_UUID);
         }
-
         if (is_string($value) && Uuid::isValid($value)) {
             $value = Uuid::fromString($value);
         }
-
         if ($value instanceof Uuid) {
-            return new MongoBinData($value->getBytes(), MongoBinData::UUID_RFC4122);
+            return new Binary($value->getBytes(), Binary::TYPE_UUID);
         }
-
-        throw ConversionException::conversionFailed($value, self::NAME);
+        throw UuidConversionException::conversionFailed($value, self::NAME);
     }
 
-    public function closureToPHP()
+    public function closureToPHP(): string
     {
         return sprintf(
             'if (null === $value) {
@@ -82,44 +77,40 @@ class UuidBinaryType extends Type
             } elseif ($value instanceof \Ramsey\Uuid\Uuid) {
                 $uuid = $value;
             } else {
-                if ($value instanceof \MongoBinData) {
-                    $value = $value->bin;
+                if ($value instanceof \MongoDB\BSON\Binary) {
+                    $value = $value->getData();
                 }
-
                 try {
                     $uuid = \Ramsey\Uuid\Uuid::fromBytes($value);
                 } catch (InvalidArgumentException $e) {
-                    throw \JDR\Uuid\Doctrine\ODM\Exception\ConversionException::conversionFailed($value, \'%s\');
+                    throw \FoundersLane\UserBundle\Exception\UuidConversionException::conversionFailed($value, \'%s\');
                 }
             }
-
             $return = $uuid;',
             self::NAME
         );
     }
 
-    public function closureToMongo()
+    public function closureToMongo(): string
     {
         return sprintf(
             'if (null === $value) {
                 $mongo = null;
-            } elseif ($value instanceof MongoBinData) {
-                $mongo = new \MongoBinData($value->bin, %d);
+            } elseif ($value instanceof \MongoDB\BSON\Binary) {
+                $mongo = new \MongoDB\BSON\Binary($value->getData(), %d);
             } else {
                 if (is_string($value) && \Ramsey\Uuid\Uuid::isValid($value)) {
                     $value = \Ramsey\Uuid\Uuid::fromString($value);
                 }
-
                 if ($value instanceof \Ramsey\Uuid\Uuid) {
-                    $mongo = new MongoBinData($value->getBytes(), %d);
+                    $mongo = new \MongoDB\BSON\Binary($value->getBytes(), %d);
                 } else {
-                    throw \JDR\Uuid\Doctrine\ODM\Exception\ConversionException::conversionFailed($value, \'%s\');
+                    throw \FoundersLane\UserBundle\Exception\UuidConversionException::conversionFailed($value, \'%s\');
                 }
             }
-
             $return = $mongo;',
-            MongoBinData::UUID_RFC4122,
-            MongoBinData::UUID_RFC4122,
+            Binary::TYPE_UUID,
+            Binary::TYPE_UUID,
             self::NAME
         );
     }
