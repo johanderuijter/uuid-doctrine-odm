@@ -19,6 +19,18 @@ All Notable changes to `uuid-doctrine-odm` will be documented in this file
 ### Security
 - Nothing
 
+## 2.0.0 - 2019-11-19
+
+### Added
+- doctrine/mongodb-odm 2 support
+- php ^7.2 support
+- ext-mongodb support
+
+### Removed
+- doctrine/mongodb-odm 1 support
+- php 5.6 support
+- ext-mongo support
+
 ## 1.0.0 - 2019-11-19
 
 ### Deprecated
