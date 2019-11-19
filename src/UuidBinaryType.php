@@ -24,7 +24,7 @@ class UuidBinaryType extends Type
      * @return \Ramsey\Uuid\UuidInterface
      * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
      */
-    public function convertToPHPValue($value): UuidInterface
+    public function convertToPHPValue($value): ?UuidInterface
     {
         if (null === $value) {
             return null;
@@ -52,7 +52,7 @@ class UuidBinaryType extends Type
      * @return \MongoDB\BSON\Binary
      * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
      */
-    public function convertToDatabaseValue($value): Binary
+    public function convertToDatabaseValue($value): ?Binary
     {
         if (null === $value) {
             return null;

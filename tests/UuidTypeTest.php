@@ -126,7 +126,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
     public function testValidDatabaseToPHPValue($input, $output)
     {
         $actual = $this->type->convertToPHPValue($input);
-        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $actual);
+        $this->assertInstanceOf(Uuid::class, $actual);
         $this->assertSame($output, $actual->toString());
     }
 
@@ -148,7 +148,7 @@ class UuidTypeTest extends \PHPUnit_Framework_TestCase
             eval($this->type->closureToPHP());
         }, $input);
 
-        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $return);
+        $this->assertInstanceOf(Uuid::class, $return);
         $this->assertEquals($output, $return->toString());
     }
 

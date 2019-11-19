@@ -3,7 +3,7 @@
 namespace JDR\Uuid\Doctrine\ODM\Test;
 
 use Doctrine\ODM\MongoDB\Types\Type;
-use MongoBinData;
+use MongoDB\BSON\Binary;
 use Ramsey\Uuid\Uuid;
 
 class UuidBinaryTypeTest extends \PHPUnit_Framework_TestCase
@@ -25,7 +25,7 @@ class UuidBinaryTypeTest extends \PHPUnit_Framework_TestCase
         $str = 'ff6f8cb0-c57d-11e1-9b21-0800200c9a66';
         $uuid = Uuid::fromString($str);
         $bin = hex2bin('ff6f8cb0c57d11e19b210800200c9a66');
-        $mongo = new MongoBinData($bin, MongoBinData::UUID_RFC4122);
+        $mongo = new Binary($bin, Binary::TYPE_UUID);
 
         return [
             [$uuid, $bin],
@@ -57,8 +57,8 @@ class UuidBinaryTypeTest extends \PHPUnit_Framework_TestCase
     public function testValidPHPToDatabaseValue($input, $output)
     {
         $actual = $this->type->convertToDatabaseValue($input);
-        $this->assertInstanceOf('\MongoBinData', $actual);
-        $this->assertSame($output, $actual->bin);
+        $this->assertInstanceOf(Binary::class, $actual);
+        $this->assertSame($output, $actual->getData());
     }
 
     /**
@@ -81,8 +81,8 @@ class UuidBinaryTypeTest extends \PHPUnit_Framework_TestCase
             eval($this->type->closureToMongo());
         }, $input);
 
-        $this->assertInstanceOf('\MongoBinData', $return);
-        $this->assertSame($output, $return->bin);
+        $this->assertInstanceOf(Binary::class, $return);
+        $this->assertSame($output, $return->getData());
     }
 
     /**
@@ -103,7 +103,7 @@ class UuidBinaryTypeTest extends \PHPUnit_Framework_TestCase
         $str = 'ff6f8cb0-c57d-11e1-9b21-0800200c9a66';
         $uuid = Uuid::fromString($str);
         $bin = hex2bin('ff6f8cb0c57d11e19b210800200c9a66');
-        $mongo = new MongoBinData($bin, MongoBinData::UUID_RFC4122);
+        $mongo = new Binary($bin, Binary::TYPE_UUID);
 
         return [
             [$uuid, $str],
@@ -135,7 +135,7 @@ class UuidBinaryTypeTest extends \PHPUnit_Framework_TestCase
     public function testValidDatabaseToPHPValue($input, $output)
     {
         $actual = $this->type->convertToPHPValue($input);
-        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $actual);
+        $this->assertInstanceOf(Uuid::class, $actual);
         $this->assertSame($output, $actual->toString());
     }
 
@@ -157,7 +157,7 @@ class UuidBinaryTypeTest extends \PHPUnit_Framework_TestCase
             eval($this->type->closureToPHP());
         }, $input);
 
-        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $return);
+        $this->assertInstanceOf(Uuid::class, $return);
         $this->assertEquals($output, $return->toString());
     }
 
