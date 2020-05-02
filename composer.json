@@ -18,7 +18,7 @@
     "require": {
         "php" : "^7.2",
         "ext-mongodb": "*",
-        "ramsey/uuid": "~3.0",
+        "ramsey/uuid": "~3.0|^4",
         "doctrine/mongodb-odm": "^2.0"
     },
     "require-dev": {
