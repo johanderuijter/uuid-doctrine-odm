@@ -19,6 +19,11 @@ All Notable changes to `uuid-doctrine-odm` will be documented in this file
 ### Security
 - Nothing
 
+## 2.0.1 - 2020-05-27
+
+### Added
+- ramsey/uuid ^4 support
+
 ## 2.0.0 - 2019-11-19
 
 ### Added
