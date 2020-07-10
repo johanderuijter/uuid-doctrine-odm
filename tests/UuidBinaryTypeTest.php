@@ -4,6 +4,7 @@ namespace JDR\Uuid\Doctrine\ODM\Test;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
+use JDR\Uuid\Doctrine\ODM\UuidBinaryType;
 use MongoDB\BSON\Binary;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -14,7 +15,7 @@ class UuidBinaryTypeTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Type::registerType('ramsey_uuid_binary', 'JDR\Uuid\Doctrine\ODM\UuidBinaryType');
+        Type::registerType('ramsey_uuid_binary', UuidBinaryType::class);
     }
 
     protected function setUp(): void
@@ -50,17 +51,20 @@ class UuidBinaryTypeTest extends TestCase
     public function testNullToDatabaseValue(): void
     {
         $actual = $this->type->convertToDatabaseValue(null);
-        $this->assertNull($actual);
+        static::assertNull($actual);
     }
 
     /**
      * @dataProvider provideValidPHPToDatabaseValues
+     *
+     * @param $input
+     * @param $output
      */
     public function testValidPHPToDatabaseValue($input, $output): void
     {
         $actual = $this->type->convertToDatabaseValue($input);
-        $this->assertInstanceOf(Binary::class, $actual);
-        $this->assertSame($output, $actual->getData());
+        static::assertInstanceOf(Binary::class, $actual);
+        static::assertSame($output, $actual->getData());
     }
 
     /**
@@ -75,6 +79,9 @@ class UuidBinaryTypeTest extends TestCase
 
     /**
      * @dataProvider provideValidPHPToDatabaseValues
+     *
+     * @param $input
+     * @param $output
      */
     public function testValidClosureToDatabase($input, $output): void
     {
@@ -84,12 +91,14 @@ class UuidBinaryTypeTest extends TestCase
             eval($this->type->closureToMongo());
         }, $input);
 
-        $this->assertInstanceOf(Binary::class, $return);
-        $this->assertSame($output, $return->getData());
+        static::assertInstanceOf(Binary::class, $return);
+        static::assertSame($output, $return->getData());
     }
 
     /**
      * @dataProvider provideInvalidPHPToDatabaseValues
+     *
+     * @param $input
      */
     public function testInvalidClosureToDatabase($input): void
     {
@@ -130,21 +139,26 @@ class UuidBinaryTypeTest extends TestCase
     public function testNullToPHPValue(): void
     {
         $actual = $this->type->convertToPHPValue(null);
-        $this->assertNull($actual);
+        static::assertNull($actual);
     }
 
     /**
      * @dataProvider provideValidDatabaseToPHPValues
+     *
+     * @param $input
+     * @param $output
      */
     public function testValidDatabaseToPHPValue($input, $output): void
     {
         $actual = $this->type->convertToPHPValue($input);
-        $this->assertInstanceOf(Uuid::class, $actual);
-        $this->assertSame($output, $actual->toString());
+        static::assertInstanceOf(Uuid::class, $actual);
+        static::assertSame($output, $actual->toString());
     }
 
     /**
      * @dataProvider provideInvalidDatabaseToPHPValues
+     *
+     * @param $input
      */
     public function testInvalidDatabaseToPHPValue($input): void
     {
@@ -155,6 +169,9 @@ class UuidBinaryTypeTest extends TestCase
 
     /**
      * @dataProvider provideValidDatabaseToPHPValues
+     *
+     * @param $input
+     * @param $output
      */
     public function testValidClosureToPHP($input, $output): void
     {
@@ -162,8 +179,8 @@ class UuidBinaryTypeTest extends TestCase
             eval($this->type->closureToPHP());
         }, $input);
 
-        $this->assertInstanceOf(Uuid::class, $return);
-        $this->assertEquals($output, $return->toString());
+        static::assertInstanceOf(Uuid::class, $return);
+        static::assertEquals($output, $return->toString());
     }
 
     /**

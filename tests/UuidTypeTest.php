@@ -4,6 +4,7 @@ namespace JDR\Uuid\Doctrine\ODM\Test;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
+use JDR\Uuid\Doctrine\ODM\UuidType;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -13,7 +14,7 @@ class UuidTypeTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Type::registerType('ramsey_uuid', 'JDR\Uuid\Doctrine\ODM\UuidType');
+        Type::registerType('ramsey_uuid', UuidType::class);
     }
 
     protected function setUp(): void
@@ -46,20 +47,25 @@ class UuidTypeTest extends TestCase
     public function testNullToDatabaseValue(): void
     {
         $actual = $this->type->convertToDatabaseValue(null);
-        $this->assertNull($actual);
+        static::assertNull($actual);
     }
 
     /**
      * @dataProvider provideValidPHPToDatabaseValues
+     *
+     * @param mixed $input
+     * @param string $output
      */
-    public function testValidPHPToDatabaseValue($input, $output): void
+    public function testValidPHPToDatabaseValue($input, string $output): void
     {
         $actual = $this->type->convertToDatabaseValue($input);
-        $this->assertSame($output, $actual);
+        static::assertSame($output, $actual);
     }
 
     /**
      * @dataProvider provideInvalidPHPToDatabaseValues
+     *
+     * @param mixed $input
      */
     public function testInvalidPHPToDatabaseValue($input): void
     {
@@ -70,8 +76,11 @@ class UuidTypeTest extends TestCase
 
     /**
      * @dataProvider provideValidPHPToDatabaseValues
+     *
+     * @param mixed $input
+     * @param string $output
      */
-    public function testValidClosureToDatabase($input, $output): void
+    public function testValidClosureToDatabase($input, string $output): void
     {
         $return = null;
 
@@ -79,11 +88,13 @@ class UuidTypeTest extends TestCase
             eval($this->type->closureToMongo());
         }, $input);
 
-        $this->assertSame($output, $return);
+        static::assertSame($output, $return);
     }
 
     /**
      * @dataProvider provideInvalidPHPToDatabaseValues
+     *
+     * @param $input
      */
     public function testInvalidClosureToDatabase($input): void
     {
@@ -121,21 +132,26 @@ class UuidTypeTest extends TestCase
     public function testNullToPHPValue(): void
     {
         $actual = $this->type->convertToPHPValue(null);
-        $this->assertNull($actual);
+        static::assertNull($actual);
     }
 
     /**
      * @dataProvider provideValidDatabaseToPHPValues
+     *
+     * @param $input
+     * @param $output
      */
     public function testValidDatabaseToPHPValue($input, $output): void
     {
         $actual = $this->type->convertToPHPValue($input);
-        $this->assertInstanceOf(Uuid::class, $actual);
-        $this->assertSame($output, $actual->toString());
+        static::assertInstanceOf(Uuid::class, $actual);
+        static::assertSame($output, $actual->toString());
     }
 
     /**
      * @dataProvider provideInvalidDatabaseToPHPValues
+     *
+     * @param $input
      */
     public function testInvalidDatabaseToPHPValue($input): void
     {
@@ -146,6 +162,9 @@ class UuidTypeTest extends TestCase
 
     /**
      * @dataProvider provideValidDatabaseToPHPValues
+     *
+     * @param $input
+     * @param $output
      */
     public function testValidClosureToPHP($input, $output): void
     {
@@ -153,12 +172,14 @@ class UuidTypeTest extends TestCase
             eval($this->type->closureToPHP());
         }, $input);
 
-        $this->assertInstanceOf(Uuid::class, $return);
-        $this->assertEquals($output, $return->toString());
+        static::assertInstanceOf(Uuid::class, $return);
+        static::assertEquals($output, $return->toString());
     }
 
     /**
      * @dataProvider provideInvalidDatabaseToPHPValues
+     *
+     * @param $input
      */
     public function testInvalidClosureToPHP($input): void
     {

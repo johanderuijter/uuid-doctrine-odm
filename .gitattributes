@@ -8,3 +8,5 @@
 /phpunit.xml.dist   export-ignore
 /.scrutinizer.yml   export-ignore
 /tests              export-ignore
+
+* text=auto eol=lf

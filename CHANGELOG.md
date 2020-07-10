@@ -19,6 +19,14 @@ All Notable changes to `uuid-doctrine-odm` will be documented in this file
 ### Security
 - Nothing
 
+## 3.0.0 - 2020-07-11
+
+### Fixed
+- doctrine/mongodb-odm 2 deprecation errors
+
+### Removed
+- doctrine/common dependency due to deprecation of the package
+
 ## 2.0.1 - 2020-05-27
 
 ### Added

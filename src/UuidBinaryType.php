@@ -21,8 +21,9 @@ class UuidBinaryType extends Type
      *
      * @param mixed $value The value to convert.
      *
+     * @throws \JDR\Uuid\Doctrine\ODM\Exception\ConversionException
+     *
      * @return \Ramsey\Uuid\UuidInterface
-     * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
      */
     public function convertToPHPValue($value): ?UuidInterface
     {
@@ -49,8 +50,9 @@ class UuidBinaryType extends Type
      *
      * @param mixed $value The value to convert.
      *
+     * @throws \JDR\Uuid\Doctrine\ODM\Exception\ConversionException
+     *
      * @return \MongoDB\BSON\Binary
-     * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
      */
     public function convertToDatabaseValue($value): ?Binary
     {

@@ -22,8 +22,8 @@ $ composer require jdr/uuid-doctrine-odm
 
 use Doctrine\ODM\MongoDB\Types\Type;
 
-Type::registerType('ramsey_uuid', 'JDR\Uuid\Doctrine\ODM\UuidType');
-Type::registerType('ramsey_uuid_binary', 'JDR\Uuid\Doctrine\ODM\UuidBinaryType');
+Type::registerType('ramsey_uuid', \JDR\Uuid\Doctrine\ODM\UuidType::class);
+Type::registerType('ramsey_uuid_binary', \JDR\Uuid\Doctrine\ODM\UuidBinaryType::class);
 
 ```
 
