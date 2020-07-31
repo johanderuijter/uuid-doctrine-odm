@@ -29,7 +29,7 @@ class UuidBinaryType extends Type
         if (null === $value) {
             return null;
         }
-        if ($value instanceof Uuid) {
+        if ($value instanceof UuidInterface) {
             return $value;
         }
         if ($value instanceof Binary) {
