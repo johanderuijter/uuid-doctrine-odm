@@ -63,7 +63,7 @@ class UuidBinaryType extends Type
         if (is_string($value) && Uuid::isValid($value)) {
             $value = Uuid::fromString($value);
         }
-        if ($value instanceof Uuid) {
+        if ($value instanceof UuidInterface) {
             return new Binary($value->getBytes(), Binary::TYPE_UUID);
         }
         throw ConversionException::conversionFailed($value, self::NAME);
