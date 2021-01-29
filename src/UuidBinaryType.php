@@ -21,15 +21,15 @@ class UuidBinaryType extends Type
      *
      * @param mixed $value The value to convert.
      *
-     * @return \Ramsey\Uuid\UuidInterface
-     * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
+     * @return UuidInterface
+     * @throws ConversionException
      */
     public function convertToPHPValue($value): ?UuidInterface
     {
         if (null === $value) {
             return null;
         }
-        if ($value instanceof Uuid) {
+        if ($value instanceof UuidInterface) {
             return $value;
         }
         if ($value instanceof Binary) {
@@ -50,7 +50,7 @@ class UuidBinaryType extends Type
      * @param mixed $value The value to convert.
      *
      * @return \MongoDB\BSON\Binary
-     * @throws \FoundersLane\UserBundle\Exception\UuidConversionException
+     * @throws ConversionException
      */
     public function convertToDatabaseValue($value): ?Binary
     {
@@ -74,7 +74,7 @@ class UuidBinaryType extends Type
         return sprintf(
             'if (null === $value) {
                 $uuid = null;
-            } elseif ($value instanceof \Ramsey\Uuid\Uuid) {
+            } elseif ($value instanceof \Ramsey\Uuid\UuidInterface) {
                 $uuid = $value;
             } else {
                 if ($value instanceof \MongoDB\BSON\Binary) {
@@ -102,7 +102,7 @@ class UuidBinaryType extends Type
                 if (is_string($value) && \Ramsey\Uuid\Uuid::isValid($value)) {
                     $value = \Ramsey\Uuid\Uuid::fromString($value);
                 }
-                if ($value instanceof \Ramsey\Uuid\Uuid) {
+                if ($value instanceof \Ramsey\Uuid\UuidInterface) {
                     $mongo = new \MongoDB\BSON\Binary($value->getBytes(), %d);
                 } else {
                     throw \JDR\Uuid\Doctrine\ODM\Exception\ConversionException::conversionFailed($value, \'%s\');

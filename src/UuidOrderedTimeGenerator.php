@@ -3,12 +3,12 @@
 namespace JDR\Uuid\Doctrine\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\Id\AbstractIdGenerator;
+use Doctrine\ODM\MongoDB\Id\IdGenerator;
 use Ramsey\Uuid\Codec\OrderedTimeCodec;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-class UuidOrderedTimeGenerator extends AbstractIdGenerator
+class UuidOrderedTimeGenerator implements IdGenerator
 {
     /**
      * @var \Ramsey\Uuid\UuidFactory
@@ -29,13 +29,13 @@ class UuidOrderedTimeGenerator extends AbstractIdGenerator
     /**
      * Generates an identifier for an entity.
      *
-     * @param \Doctrine\ODM\MongoDB\DocumentManager $documentManager
+     * @param \Doctrine\ODM\MongoDB\DocumentManager $dm
      * @param object                                $document
      *
      * @return \Ramsey\Uuid\UuidInterface
      * @throws \Exception
      */
-    public function generate(DocumentManager $documentManager, object $document): UuidInterface
+    public function generate(DocumentManager $dm, object $document): UuidInterface
     {
         return $this->factory->uuid1();
     }
