@@ -4,9 +4,11 @@ namespace JDR\Uuid\Doctrine\ODM\Test;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
+use JDR\Uuid\Doctrine\ODM\UuidBinaryType;
 use MongoDB\BSON\Binary;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 class UuidBinaryTypeTest extends TestCase
 {
@@ -14,7 +16,7 @@ class UuidBinaryTypeTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Type::registerType('ramsey_uuid_binary', 'JDR\Uuid\Doctrine\ODM\UuidBinaryType');
+        Type::registerType('ramsey_uuid_binary', UuidBinaryType::class);
     }
 
     protected function setUp(): void
@@ -139,7 +141,7 @@ class UuidBinaryTypeTest extends TestCase
     public function testValidDatabaseToPHPValue($input, $output): void
     {
         $actual = $this->type->convertToPHPValue($input);
-        $this->assertInstanceOf(Uuid::class, $actual);
+        $this->assertInstanceOf(UuidInterface::class, $actual);
         $this->assertSame($output, $actual->toString());
     }
 
@@ -162,7 +164,7 @@ class UuidBinaryTypeTest extends TestCase
             eval($this->type->closureToPHP());
         }, $input);
 
-        $this->assertInstanceOf(Uuid::class, $return);
+        $this->assertInstanceOf(UuidInterface::class, $return);
         $this->assertEquals($output, $return->toString());
     }
 

@@ -4,9 +4,9 @@ namespace JDR\Uuid\Doctrine\ODM;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 use InvalidArgumentException;
-use Ramsey\Uuid\Uuid;
-
 use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 class UuidType extends Type
 {
@@ -20,7 +20,7 @@ class UuidType extends Type
      *
      * @param mixed $value The value to convert.
      *
-     * @return Uuid
+     * @return UuidInterface
      */
     public function convertToPHPValue($value)
     {
@@ -28,7 +28,7 @@ class UuidType extends Type
             return null;
         }
 
-        if ($value instanceof Uuid) {
+        if ($value instanceof UuidInterface) {
             return $value;
         }
 
@@ -54,7 +54,7 @@ class UuidType extends Type
             return null;
         }
 
-        if ($value instanceof Uuid || Uuid::isValid($value)) {
+        if ($value instanceof UuidInterface || Uuid::isValid($value)) {
             return (string) $value;
         }
 
@@ -66,7 +66,7 @@ class UuidType extends Type
         return sprintf(
             'if (null === $value) {
                 $uuid = null;
-            } elseif ($value instanceof \Ramsey\Uuid\Uuid) {
+            } elseif ($value instanceof \Ramsey\Uuid\UuidInterface) {
                 $uuid = $value;
             } else {
                 try {
@@ -86,7 +86,7 @@ class UuidType extends Type
         return sprintf(
             'if (null === $value) {
                 $mongo = null;
-            } elseif ($value instanceof \Ramsey\Uuid\Uuid || \Ramsey\Uuid\Uuid::isValid($value)) {
+            } elseif ($value instanceof \Ramsey\Uuid\UuidInterface || \Ramsey\Uuid\Uuid::isValid($value)) {
                 $mongo = (string) $value;
             } else {
                 throw \JDR\Uuid\Doctrine\ODM\Exception\ConversionException::conversionFailed($value, \'%s\');

@@ -4,8 +4,10 @@ namespace JDR\Uuid\Doctrine\ODM\Test;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 use JDR\Uuid\Doctrine\ODM\Exception\ConversionException;
+use JDR\Uuid\Doctrine\ODM\UuidType;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 class UuidTypeTest extends TestCase
 {
@@ -13,7 +15,7 @@ class UuidTypeTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Type::registerType('ramsey_uuid', 'JDR\Uuid\Doctrine\ODM\UuidType');
+        Type::registerType('ramsey_uuid', UuidType::class);
     }
 
     protected function setUp(): void
@@ -130,7 +132,7 @@ class UuidTypeTest extends TestCase
     public function testValidDatabaseToPHPValue($input, $output): void
     {
         $actual = $this->type->convertToPHPValue($input);
-        $this->assertInstanceOf(Uuid::class, $actual);
+        $this->assertInstanceOf(UuidInterface::class, $actual);
         $this->assertSame($output, $actual->toString());
     }
 
@@ -153,7 +155,7 @@ class UuidTypeTest extends TestCase
             eval($this->type->closureToPHP());
         }, $input);
 
-        $this->assertInstanceOf(Uuid::class, $return);
+        $this->assertInstanceOf(UuidInterface::class, $return);
         $this->assertEquals($output, $return->toString());
     }
 
