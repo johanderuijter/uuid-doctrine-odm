@@ -11,7 +11,8 @@ jobs:
             fail-fast: false
             matrix:
                 php: ['7.2', '7.3', '7.4']
-        name: PHP ${{ matrix.php }} tests
+                dependencies: ['lowest', 'highest']
+        name: PHP ${{ matrix.php }} tests on deps=${{ matrix.dependencies }}
 
         steps:
             - uses: actions/checkout@v2
@@ -23,5 +24,7 @@ jobs:
                     extensions: mongodb
 
             - uses: "ramsey/composer-install@v1"
+              with:
+                    dependency-versions: ${{ matrix.dependencies }}
 
             -  run: vendor/bin/phpunit
