@@ -27,7 +27,6 @@ All Notable changes to `uuid-doctrine-odm` will be documented in this file
 ### Removed
 - php <7.3 support
 
-## 2.0.2 - 2021-02-DD
 ## 2.0.3 - 2021-02-11
 
 ### Fixed
