@@ -19,7 +19,7 @@ All Notable changes to `uuid-doctrine-odm` will be documented in this file
 ### Security
 - Nothing
 
-## 2.0.4 - 2021-02-DD
+## 2.0.4 - 2021-02-11
 
 ### Added
 - php ^8.0 support
