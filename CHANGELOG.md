@@ -19,6 +19,15 @@ All Notable changes to `uuid-doctrine-odm` will be documented in this file
 ### Security
 - Nothing
 
+## 2.0.2 - 2021-02-DD
+
+### Fixed
+- Tests on higher and lower dependencies versions
+- Internal `Uuid` vs `UuidInterface` usage
+
+### Removed
+- doctrine/persistence <1.3.3 support
+
 ## 2.0.1 - 2020-05-27
 
 ### Added

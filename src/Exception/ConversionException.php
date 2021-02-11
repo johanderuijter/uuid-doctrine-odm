@@ -2,7 +2,7 @@
 
 namespace JDR\Uuid\Doctrine\ODM\Exception;
 
-use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\Persistence\Mapping\MappingException;
 
 /**
  * ConversionException
