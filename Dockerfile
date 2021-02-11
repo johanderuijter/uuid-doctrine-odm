@@ -1,3 +1,14 @@
-FROM php:7.4-cli
+ARG PHP_VERSION=7.4
+FROM php:${PHP_VERSION}-cli
 
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+RUN apt-get update \
+    && apt-get install -y \
+        libzip-dev \
+    && pecl install \
+        mongodb \
+        zip \
+    && docker-php-ext-enable \
+        mongodb \
+        zip
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
