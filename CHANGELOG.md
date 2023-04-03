@@ -19,6 +19,11 @@ All Notable changes to `uuid-doctrine-odm` will be documented in this file
 ### Security
 - Nothing
 
+## 2.0.5 - 2023-04-03
+
+### Added
+- doctrine/persistence ^3.0 support
+
 ## 2.0.4 - 2021-02-11
 
 ### Added
